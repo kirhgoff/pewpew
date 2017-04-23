@@ -20,9 +20,14 @@ defmodule Pewpew.Player do
     GenServer.call(player_pid, {:is_alive?})
   end
 
+  def stop(player_pid) do
+    GenServer.stop(player_pid)
+  end
+
   ## Server Callbacks
 
   def init({:ok, player}) do
+    # TODO default values
     {:ok, player}
   end
 
@@ -38,5 +43,4 @@ defmodule Pewpew.Player do
   def handle_call({:is_alive?}, _from, player) do
     {:reply, Map.get(player, :health) > 0.0, player}
   end
-
 end
