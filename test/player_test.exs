@@ -2,7 +2,7 @@ defmodule Pewpew.PlayerTest do
   use ExUnit.Case, async: true
 
   setup do
-    {:ok, player} = Pewpew.Player.start_link(%{name: "kirill", health: 100.0})
+    {:ok, player} = Pewpew.Player.start(%{name: "kirill", health: 100.0})
     {:ok, player: player}
   end
 

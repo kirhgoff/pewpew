@@ -3,8 +3,8 @@ defmodule Pewpew.PlayerRegistry do
 
   ## Client API
 
-  def start_link do
-    GenServer.start_link(__MODULE__, :ok, [])
+  def start_link(name) do
+    GenServer.start_link(__MODULE__, :ok, name: name)
   end
 
   def lookup(registry_pid, name) do
@@ -36,11 +36,11 @@ defmodule Pewpew.PlayerRegistry do
     if Map.has_key?(players, name) do
       {:error, {players, refs}}
     else
-      {:ok, player} = Pewpew.Player.start_link(player)
-      ref = Process.monitor(player)
-      players = Map.put(players, name, player)
+      {:ok, pid} = Pewpew.Player.start(player)
+      ref = Process.monitor(pid)
       refs = Map.put(refs, ref, name)
-      {:reply, player, {players, refs}}
+      players = Map.put(players, name, pid)
+      {:reply, ref, {players, refs}}
     end
   end
 

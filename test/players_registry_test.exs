@@ -1,8 +1,8 @@
 defmodule Pewpew.PlayerRegistryTest do
   use ExUnit.Case, async: true
 
-  setup do
-    {:ok, registry} = Pewpew.PlayerRegistry.start_link
+  setup context do
+    {:ok, registry} = Pewpew.PlayerRegistry.start_link(context.test)
     {:ok, registry: registry}
   end
 
@@ -13,6 +13,16 @@ defmodule Pewpew.PlayerRegistryTest do
 
   test "removes player on exit", %{registry: registry} do
     GenServer.stop(create_fixture(registry))
+    assert Pewpew.PlayerRegistry.lookup(registry, "kirill") == nil
+  end
+
+  test "removes player on crash", %{registry: registry} do
+    player = create_fixture(registry)
+    ref = Process.monitor(player)
+    Process.exit(player, :shutdown)
+
+    assert_receive {:DOWN, ^ref, _, _, _}
+
     assert Pewpew.PlayerRegistry.lookup(registry, "kirill") == nil
   end
 

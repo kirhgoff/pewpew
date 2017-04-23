@@ -4,8 +4,8 @@ defmodule Pewpew.Player do
 
   ## Client API
 
-  def start_link(player) do
-    GenServer.start_link(__MODULE__, {:ok, player})
+  def start(player) do
+    GenServer.start(__MODULE__, {:ok, player})
   end
 
   def health(player_pid) do
